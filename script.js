@@ -5,15 +5,17 @@
 const menu = document.getElementById("menu");
 const nav = document.getElementById("nav");
 
-menu.addEventListener("click", () => {
-  nav.classList.toggle("open");
-});
-
-document.querySelectorAll("nav a").forEach(a => {
-  a.addEventListener("click", () => {
-    nav.classList.remove("open");
+if (menu && nav) {
+  menu.addEventListener("click", () => {
+    nav.classList.toggle("open");
   });
-});
+
+  document.querySelectorAll("#nav a").forEach(link => {
+    link.addEventListener("click", () => {
+      nav.classList.remove("open");
+    });
+  });
+}
 
 
 /* =========================
@@ -22,34 +24,39 @@ document.querySelectorAll("nav a").forEach(a => {
 
 const themeToggle = document.getElementById("themeToggle");
 
-themeToggle.addEventListener("click", () => {
+if (themeToggle) {
 
-  document.body.classList.toggle("light");
+  themeToggle.addEventListener("click", () => {
 
-  if (document.body.classList.contains("light")) {
+    document.body.classList.toggle("light");
 
+    if (document.body.classList.contains("light")) {
+
+      themeToggle.textContent = "🌙";
+      localStorage.setItem("theme", "light");
+
+    } else {
+
+      themeToggle.textContent = "☀️";
+      localStorage.setItem("theme", "dark");
+
+    }
+
+  });
+
+
+  /* Remember selected theme */
+
+  if (localStorage.getItem("theme") === "light") {
+
+    document.body.classList.add("light");
     themeToggle.textContent = "🌙";
-
-    localStorage.setItem("theme", "light");
 
   } else {
 
     themeToggle.textContent = "☀️";
 
-    localStorage.setItem("theme", "dark");
-
   }
-
-});
-
-
-/* Remember selected theme */
-
-if (localStorage.getItem("theme") === "light") {
-
-  document.body.classList.add("light");
-
-  themeToggle.textContent = "🌙";
 
 }
 
@@ -58,30 +65,41 @@ if (localStorage.getItem("theme") === "light") {
    SCROLL REVEAL
 ========================= */
 
-const io = new IntersectionObserver(
-  entries => {
+const revealElements = document.querySelectorAll(".reveal");
 
-    entries.forEach(entry => {
+if ("IntersectionObserver" in window) {
 
-      if (entry.isIntersecting) {
+  const io = new IntersectionObserver(
+    entries => {
 
-        entry.target.classList.add("show");
+      entries.forEach(entry => {
 
-        io.unobserve(entry.target);
+        if (entry.isIntersecting) {
 
-      }
+          entry.target.classList.add("show");
+          io.unobserve(entry.target);
 
-    });
+        }
 
-  },
-  {
-    threshold: 0.12
-  }
-);
+      });
 
-document.querySelectorAll(".reveal").forEach(element => {
-  io.observe(element);
-});
+    },
+    {
+      threshold: 0.12
+    }
+  );
+
+  revealElements.forEach(element => {
+    io.observe(element);
+  });
+
+} else {
+
+  revealElements.forEach(element => {
+    element.classList.add("show");
+  });
+
+}
 
 
 /* =========================
@@ -90,65 +108,69 @@ document.querySelectorAll(".reveal").forEach(element => {
 
 const typingElement = document.getElementById("typing");
 
-const words = [
-  "IT Student",
-  "Programmer",
-  "Software Developer",
-  "Problem Solver"
-];
+if (typingElement) {
 
-let wordIndex = 0;
-let charIndex = 0;
-let deleting = false;
+  const words = [
+    "IT Student",
+    "Programmer",
+    "Software Developer",
+    "Problem Solver"
+  ];
 
-function typeEffect() {
+  let wordIndex = 0;
+  let charIndex = 0;
+  let deleting = false;
 
-  const currentWord = words[wordIndex];
+  function typeEffect() {
 
-  if (!deleting) {
+    const currentWord = words[wordIndex];
 
-    typingElement.textContent =
-      currentWord.substring(0, charIndex + 1);
+    if (!deleting) {
 
-    charIndex++;
+      typingElement.textContent =
+        currentWord.substring(0, charIndex + 1);
 
-    if (charIndex === currentWord.length) {
+      charIndex++;
 
-      deleting = true;
+      if (charIndex === currentWord.length) {
 
-      setTimeout(typeEffect, 1400);
+        deleting = true;
 
-      return;
-    }
+        setTimeout(typeEffect, 1400);
+        return;
 
-  } else {
+      }
 
-    typingElement.textContent =
-      currentWord.substring(0, charIndex - 1);
+    } else {
 
-    charIndex--;
+      typingElement.textContent =
+        currentWord.substring(0, charIndex - 1);
 
-    if (charIndex === 0) {
+      charIndex--;
 
-      deleting = false;
+      if (charIndex === 0) {
 
-      wordIndex++;
+        deleting = false;
+        wordIndex++;
 
-      if (wordIndex === words.length) {
-        wordIndex = 0;
+        if (wordIndex === words.length) {
+          wordIndex = 0;
+        }
+
       }
 
     }
 
+    setTimeout(
+      typeEffect,
+      deleting ? 55 : 90
+    );
+
   }
 
-  setTimeout(
-    typeEffect,
-    deleting ? 55 : 90
-  );
-}
+  typeEffect();
 
-typeEffect();
+}
 
 
 /* =========================
@@ -157,12 +179,16 @@ typeEffect();
 
 const cursorGlow = document.querySelector(".cursor-glow");
 
-document.addEventListener("mousemove", event => {
+if (cursorGlow) {
 
-  cursorGlow.style.left = event.clientX + "px";
-  cursorGlow.style.top = event.clientY + "px";
+  document.addEventListener("mousemove", event => {
 
-});
+    cursorGlow.style.left = event.clientX + "px";
+    cursorGlow.style.top = event.clientY + "px";
+
+  });
+
+}
 
 
 /* =========================
